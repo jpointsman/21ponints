@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="locadmin (generated)" id="1468254856234-1">
+        <createSequence sequenceName="hibernate_sequence"/>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-2">
+        <createTable tableName="blood_pressure">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="blood_pressurePK"/>
+            </column>
+            <column name="diastolic" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="systolic" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="timestamp" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-3">
+        <createTable tableName="jhi_authority">
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-4">
+        <createTable tableName="jhi_persistent_audit_event">
+            <column autoIncrement="true" name="event_id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="jhi_persistent_audit_eventPK"/>
+            </column>
+            <column name="event_date" type="timestamp"/>
+            <column name="event_type" type="VARCHAR(255)"/>
+            <column name="principal" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-5">
+        <createTable tableName="jhi_persistent_audit_evt_data">
+            <column name="event_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="value" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-6">
+        <createTable tableName="jhi_social_user_connection">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="jhi_social_user_connectionPK"/>
+            </column>
+            <column name="access_token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="display_name" type="VARCHAR(255)"/>
+            <column name="expire_time" type="BIGINT"/>
+            <column name="image_url" type="VARCHAR(255)"/>
+            <column name="profile_url" type="VARCHAR(255)"/>
+            <column name="provider_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="provider_user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rank" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="refresh_token" type="VARCHAR(255)"/>
+            <column name="secret" type="VARCHAR(255)"/>
+            <column name="user_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-7">
+        <createTable tableName="jhi_user">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="jhi_userPK"/>
+            </column>
+            <column name="created_by" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_by" type="VARCHAR(50)"/>
+            <column name="last_modified_date" type="timestamp"/>
+            <column name="activated" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="activation_key" type="VARCHAR(20)"/>
+            <column name="email" type="VARCHAR(100)"/>
+            <column name="first_name" type="VARCHAR(50)"/>
+            <column name="lang_key" type="VARCHAR(5)"/>
+            <column name="last_name" type="VARCHAR(50)"/>
+            <column name="login" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(60)"/>
+            <column name="reset_date" type="timestamp"/>
+            <column name="reset_key" type="VARCHAR(20)"/>
+            <column name="preferences_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-8">
+        <createTable tableName="jhi_user_authority">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authority_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-9">
+        <createTable tableName="points">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="pointsPK"/>
+            </column>
+            <column name="alcohol" type="INT"/>
+            <column name="date" type="date"/>
+            <column name="exercise" type="INT"/>
+            <column name="meals" type="INT"/>
+            <column name="note" type="VARCHAR(255)"/>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-10">
+        <createTable tableName="preferences">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="preferencesPK"/>
+            </column>
+            <column name="weekly_goal" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="weight_units" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-11">
+        <createTable tableName="weight">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="weightPK"/>
+            </column>
+            <column name="timestamp" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="weight" type="FLOAT8">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-12">
+        <addPrimaryKey columnNames="event_id, name" tableName="jhi_persistent_audit_evt_data"/>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-13">
+        <addPrimaryKey columnNames="user_id, authority_name" tableName="jhi_user_authority"/>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-14">
+        <addPrimaryKey columnNames="name" constraintName="jhi_authorityPK" tableName="jhi_authority"/>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-15">
+        <addUniqueConstraint columnNames="email" constraintName="UC_JHI_USEREMAIL_COL" tableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-16">
+        <addUniqueConstraint columnNames="login" constraintName="UC_JHI_USERLOGIN_COL" tableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-17">
+        <addForeignKeyConstraint baseColumnNames="preferences_id" baseTableName="jhi_user" constraintName="FK_cipj0mxag1inl36996yiogsd5" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="preferences"/>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-18">
+        <addForeignKeyConstraint baseColumnNames="event_id" baseTableName="jhi_persistent_audit_evt_data" constraintName="FK_evb970jo5bi8aon8s65c0lyyn" deferrable="false" initiallyDeferred="false" referencedColumnNames="event_id" referencedTableName="jhi_persistent_audit_event"/>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-19">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="blood_pressure" constraintName="FK_gpgbpq37i0fqpjq2u70qog4xl" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-20">
+        <addForeignKeyConstraint baseColumnNames="authority_name" baseTableName="jhi_user_authority" constraintName="FK_ik5r332jlvpolfr7e5n7oi42l" deferrable="false" initiallyDeferred="false" referencedColumnNames="name" referencedTableName="jhi_authority"/>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-21">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="jhi_user_authority" constraintName="FK_pg0oaw6mr9pt3ibeihdc1jwof" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-22">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="weight" constraintName="FK_rus9mpsdmijsl6fujhhud5pgu" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+    <changeSet author="locadmin (generated)" id="1468254856234-23">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="points" constraintName="FK_swg8y3uo5dm5psbnesgeu1my" deferrable="false" initiallyDeferred="false" referencedColumnNames="id" referencedTableName="jhi_user"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,24 @@
+{
+    "healthpointsApp": {
+        "preferences" : {
+            "home": {
+                "title": "Preferences",
+                "createLabel": "Создать новый Preferences",
+                "createOrEditLabel": "Создать или отредактировать Preferences",
+                "search": "Найти Preferences"
+            },
+            "created": "Новый Preferences создан с идентификатором {{ param }}",
+            "updated": "Preferences обновлен с идентификатором {{ param }}",
+            "deleted": "Preferences удален с идентификатором {{ param }}",
+            "delete": {
+                "question": "Вы уверены что хотите удалить Preferences {{ id }}?"
+            },
+            "detail": {
+                "title": "Preferences"
+            },
+            "weekly_goal": "Weekly Goal",
+            "weight_units": "Weight Units",
+            "user": "User"
+        }
+    }
+}

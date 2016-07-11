@@ -1,0 +1,27 @@
+{
+    "healthpointsApp": {
+        "points" : {
+            "home": {
+                "title": "Points",
+                "createLabel": "Создать новый Points",
+                "createOrEditLabel": "Создать или отредактировать Points",
+                "search": "Найти Points"
+            },
+            "created": "Новый Points создан с идентификатором {{ param }}",
+            "updated": "Points обновлен с идентификатором {{ param }}",
+            "deleted": "Points удален с идентификатором {{ param }}",
+            "delete": {
+                "question": "Вы уверены что хотите удалить Points {{ id }}?"
+            },
+            "detail": {
+                "title": "Points"
+            },
+            "date": "Date",
+            "exercise": "Exercise",
+            "meals": "Meals",
+            "alcohol": "Alcohol",
+            "note": "Note",
+            "user": "User"
+        }
+    }
+}

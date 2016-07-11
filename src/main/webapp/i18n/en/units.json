@@ -1,0 +1,9 @@
+{
+    "healthpointsApp": {
+        "Units" : {
+            "null": "",
+            "kg": "kg",
+            "lb": "lb"
+        }
+    }
+}

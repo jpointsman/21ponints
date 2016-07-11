@@ -1,0 +1,37 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "login"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "date",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "exercise",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "meals",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "alcohol",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "note",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20160711154448",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "points",
+    "pagination": "infinite-scroll"
+}

@@ -1,0 +1,26 @@
+
+<div>
+    <h2><span translate="healthpointsApp.weight.detail.title">Weight</span> {{vm.weight.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span translate="healthpointsApp.weight.timestamp">Timestamp</span></dt>
+        <dd>
+            <span>{{vm.weight.timestamp | date:'medium'}}</span>
+        </dd>
+        <dt><span translate="healthpointsApp.weight.weight">Weight</span></dt>
+        <dd>
+            <span>{{vm.weight.weight}}</span>
+        </dd>
+        <dt><span translate="healthpointsApp.weight.user">User</span></dt>
+        <dd>
+            {{vm.weight.user.login}}
+        </dd>
+    </dl>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

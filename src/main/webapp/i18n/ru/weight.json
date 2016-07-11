@@ -1,0 +1,24 @@
+{
+    "healthpointsApp": {
+        "weight" : {
+            "home": {
+                "title": "Weights",
+                "createLabel": "Создать новый Weight",
+                "createOrEditLabel": "Создать или отредактировать Weight",
+                "search": "Найти Weight"
+            },
+            "created": "Новый Weight создан с идентификатором {{ param }}",
+            "updated": "Weight обновлен с идентификатором {{ param }}",
+            "deleted": "Weight удален с идентификатором {{ param }}",
+            "delete": {
+                "question": "Вы уверены что хотите удалить Weight {{ id }}?"
+            },
+            "detail": {
+                "title": "Weight"
+            },
+            "timestamp": "Timestamp",
+            "weight": "Weight",
+            "user": "User"
+        }
+    }
+}

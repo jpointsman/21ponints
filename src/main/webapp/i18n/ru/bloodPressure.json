@@ -1,0 +1,25 @@
+{
+    "healthpointsApp": {
+        "bloodPressure" : {
+            "home": {
+                "title": "Blood Pressures",
+                "createLabel": "Создать новый Blood Pressure",
+                "createOrEditLabel": "Создать или отредактировать Blood Pressure",
+                "search": "Найти Blood Pressure"
+            },
+            "created": "Новый Blood Pressure создан с идентификатором {{ param }}",
+            "updated": "Blood Pressure обновлен с идентификатором {{ param }}",
+            "deleted": "Blood Pressure удален с идентификатором {{ param }}",
+            "delete": {
+                "question": "Вы уверены что хотите удалить Blood Pressure {{ id }}?"
+            },
+            "detail": {
+                "title": "Blood Pressure"
+            },
+            "timestamp": "Timestamp",
+            "systolic": "Systolic",
+            "diastolic": "Diastolic",
+            "user": "User"
+        }
+    }
+}

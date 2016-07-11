@@ -1,0 +1,38 @@
+
+<div>
+    <h2><span translate="healthpointsApp.points.detail.title">Points</span> {{vm.points.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span translate="healthpointsApp.points.date">Date</span></dt>
+        <dd>
+            <span>{{vm.points.date | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span translate="healthpointsApp.points.exercise">Exercise</span></dt>
+        <dd>
+            <span>{{vm.points.exercise}}</span>
+        </dd>
+        <dt><span translate="healthpointsApp.points.meals">Meals</span></dt>
+        <dd>
+            <span>{{vm.points.meals}}</span>
+        </dd>
+        <dt><span translate="healthpointsApp.points.alcohol">Alcohol</span></dt>
+        <dd>
+            <span>{{vm.points.alcohol}}</span>
+        </dd>
+        <dt><span translate="healthpointsApp.points.note">Note</span></dt>
+        <dd>
+            <span>{{vm.points.note}}</span>
+        </dd>
+        <dt><span translate="healthpointsApp.points.user">User</span></dt>
+        <dd>
+            {{vm.points.user.login}}
+        </dd>
+    </dl>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

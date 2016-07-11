@@ -41,7 +41,7 @@ public class User extends AbstractAuditingEntity implements Serializable {
 
     @JsonIgnore
     @NotNull
-    @Size(min = 60, max = 60) 
+    @Size(min = 60, max = 60)
     @Column(name = "password_hash",length = 60)
     private String password;
 
@@ -86,6 +86,17 @@ public class User extends AbstractAuditingEntity implements Serializable {
         inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Authority> authorities = new HashSet<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Preferences preferences;
+
+    public Preferences getPreferences() {
+        return preferences;
+    }
+    public void setPreferences(Preferences preferences) {
+        this.preferences = preferences;
+    }
 
     public Long getId() {
         return id;
