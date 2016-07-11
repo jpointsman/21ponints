@@ -1,0 +1,12 @@
+version: '2'
+services:
+    healthpoints-postgresql:
+        container_name: healthpoints-postgresql
+        image: postgres:9.5.2
+        # volumes:
+        #     - ~/volumes/jhipster/healthpoints/postgresql/:/var/lib/postgresql/
+        environment:
+            - POSTGRES_USER=healthpoints
+            - POSTGRES_PASSWORD=
+        ports:
+            - 5432:5432
