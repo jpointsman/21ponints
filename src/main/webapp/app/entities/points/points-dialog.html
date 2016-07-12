@@ -1,60 +1,65 @@
 
 <form name="editForm" role="form" novalidate ng-submit="vm.save()">
-
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                 ng-click="vm.clear()">&times;</button>
-        <h4 class="modal-title" id="myPointsLabel" translate="healthpointsApp.points.home.createOrEditLabel">Create or edit a Points</h4>
+        <h4 class="modal-title" translate="healthpointsApp.points.home.createOrEditLabel" ng-show="vm.points.id">Add/Edit Points</h4>
+        <h4 class="modal-title" translate="healthpointsApp.points.home.createLabel" ng-hide="vm.points.id">Add Points</h4>
     </div>
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
         <div class="form-group" ng-show="vm.points.id">
             <label for="id" translate="global.field.id">ID</label>
             <input type="text" class="form-control" id="id" name="id"
-                    ng-model="vm.points.id" readonly />
+                   ng-model="vm.points.id" readonly />
         </div>
         <div class="form-group">
-            <label class="control-label" translate="healthpointsApp.points.date" for="field_date">Date</label>
-                <div class="input-group">
-                    <input id="field_date" type="text" class="form-control" name="date" uib-datepicker-popup="{{dateformat}}" ng-model="vm.points.date" is-open="vm.datePickerOpenStatus.date"
-                    />
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('date')"><i class="glyphicon glyphicon-calendar"></i></button>
-                    </span>
-                </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label" translate="healthpointsApp.points.exercise" for="field_exercise">Exercise</label>
-            <input type="number" class="form-control" name="exercise" id="field_exercise"
-                    ng-model="vm.points.exercise"
-                     />
-        </div>
-        <div class="form-group">
-            <label class="control-label" translate="healthpointsApp.points.meals" for="field_meals">Meals</label>
-            <input type="number" class="form-control" name="meals" id="field_meals"
-                    ng-model="vm.points.meals"
-                     />
-        </div>
-        <div class="form-group">
-            <label class="control-label" translate="healthpointsApp.points.alcohol" for="field_alcohol">Alcohol</label>
-            <input type="number" class="form-control" name="alcohol" id="field_alcohol"
-                    ng-model="vm.points.alcohol"
-                     />
-        </div>
-        <div class="form-group">
-            <label class="control-label" translate="healthpointsApp.points.note" for="field_note">Note</label>
-            <input type="text" class="form-control" name="note" id="field_note"
-                    ng-model="vm.points.note"
-                     />
+            <label translate="healthpointsApp.points.date" for="field_date">Date</label>
+            <input type="date" class="form-control" name="date" id="field_date" ng-model="vm.points.date">
         </div>
 
         <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="vm.points.exercise" id="field_exercise" ng-true-value="1" ng-false-value="0">
+                    <span class="checkbox-material"><span class="check"></span></span>
+                    <label translate="healthpointsApp.points.exercise" for="field_exercise">Exercise</label>
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="vm.points.meals" id="field_meals" ng-true-value="1" ng-false-value="0">
+                    <span class="checkbox-material"><span class="check"></span></span>
+                    <label translate="healthpointsApp.points.meals" for="field_meals">Meals</label>
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="vm.points.alcohol" id="field_alcohol" ng-true-value="1" ng-false-value="0">
+                    <span class="checkbox-material"><span class="check"></span></span>
+                    <label translate="healthpointsApp.points.alcohol" for="field_alcohol">Alcohol</label>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label translate="healthpointsApp.points.note" for="field_note">Notes</label>
+            <textarea class="form-control" name="notes" id="field_note"
+                      ng-model="vm.points.note"
+                      rows="3"></textarea>
+        </div>
+
+        <div class="form-group" has-authority="ROLE_ADMIN">
             <label translate="healthpointsApp.points.user" for="field_user">User</label>
             <select class="form-control" id="field_user" name="user" ng-model="vm.points.user" ng-options="user as user.login for user in vm.users track by user.id">
-                <option value=""></option>
             </select>
         </div>
     </div>
+
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
             <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>

@@ -3,7 +3,10 @@ package org.jhipster.health.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import org.jhipster.health.domain.Points;
 import org.jhipster.health.repository.PointsRepository;
+import org.jhipster.health.repository.UserRepository;
 import org.jhipster.health.repository.search.PointsSearchRepository;
+import org.jhipster.health.security.AuthoritiesConstants;
+import org.jhipster.health.security.SecurityUtils;
 import org.jhipster.health.web.rest.util.HeaderUtil;
 import org.jhipster.health.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
@@ -17,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -34,13 +38,17 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class PointsResource {
 
     private final Logger log = LoggerFactory.getLogger(PointsResource.class);
-        
+
     @Inject
     private PointsRepository pointsRepository;
-    
+
+    @Inject
+    private UserRepository userRepository;
+
+
     @Inject
     private PointsSearchRepository pointsSearchRepository;
-    
+
     /**
      * POST  /points : Create a new points.
      *
@@ -52,10 +60,14 @@ public class PointsResource {
         method = RequestMethod.POST,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    public ResponseEntity<Points> createPoints(@RequestBody Points points) throws URISyntaxException {
+    public ResponseEntity<Points> createPoints(@Valid @RequestBody Points points) throws URISyntaxException {
         log.debug("REST request to save Points : {}", points);
         if (points.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("points", "idexists", "A new points cannot already have an ID")).body(null);
+        }
+        if (points.getUser() == null || !SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
+            log.debug("No user passed in, using current user: {}", SecurityUtils.getCurrentUserLogin());
+            points.setUser(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
         }
         Points result = pointsRepository.save(points);
         pointsSearchRepository.save(result);
@@ -103,7 +115,7 @@ public class PointsResource {
     public ResponseEntity<List<Points>> getAllPoints(Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of Points");
-        Page<Points> page = pointsRepository.findAll(pageable); 
+        Page<Points> page = pointsRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/points");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }

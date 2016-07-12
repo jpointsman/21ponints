@@ -1,84 +1,78 @@
 <div>
-    <h2 translate="healthpointsApp.points.home.title">Points</h2>
-    <jhi-alert></jhi-alert>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-xs-4 no-padding-left">
-                <button class="btn btn-primary" ui-sref="points.new" >
-                    <span class="glyphicon glyphicon-plus"></span>
-                    <span class="hidden-xs"  translate="healthpointsApp.points.home.createLabel">
-                        Create new Points
-                    </span>
+    <div class="row">
+        <div class="col-sm-7">
+            <h2 translate="healthpointsApp.points.home.title">Points</h2>
+            <jhi-alert></jhi-alert>
+        </div>
+        <div class="col-sm-5 text-right">
+            <form name="searchForm" class="form-inline">
+                <div class="form-group p-r">
+                    <input type="text" id="searchQuery"
+                           class="form-control" ng-model="vm.searchQuery"
+                           placeholder="{{'healthpointsApp.points.home.search' | translate}}">
+                </div>
+                <button class="btn btn-info btn-sm" ng-click="vm.search(vm.searchQuery)"
+                        tooltip="{{'healthpointsApp.points.home.search' | translate}}">
+                    <i class="glyphicon glyphicon-search"></i>
                 </button>
-            </div>
-            <div class="col-xs-8 no-padding-right">
-                <form name="searchForm" class="form-inline">
-                    <div class="input-group pull-right" >
-                        <input type="text" class="form-control" ng-model="vm.searchQuery" id="searchQuery" placeholder="{{ 'healthpointsApp.points.home.search' | translate }}">
-                        <span  class="input-group-btn width-min" >
-                            <button class="btn btn-info" ng-click="vm.search(vm.searchQuery)">
-                                <span class="glyphicon glyphicon-search"></span>
-                            </button>
-                        </span>
-                        <span class="input-group-btn width-min" ng-if="vm.currentSearch">
-                            <button class="btn btn-info" ng-click="vm.clear()">
-                                <span class="glyphicon glyphicon-trash"></span>
-                            </button>
-                        </span>
-                    </div>
-                </form>
-            </div>
+                <button class="btn btn-primary btn-sm " ui-sref="points.new"
+                        tooltip="{{'healthpointsApp.points.home.createLabel' | translate}}">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </form>
         </div>
     </div>
     <br/>
     <div class="table-responsive">
         <table class="jh-table table table-striped">
             <thead>
-                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.reset()">
-                    <th jh-sort-by="id"><span translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="date"><span translate="healthpointsApp.points.date">Date</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="exercise"><span translate="healthpointsApp.points.exercise">Exercise</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="meals"><span translate="healthpointsApp.points.meals">Meals</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="alcohol"><span translate="healthpointsApp.points.alcohol">Alcohol</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="note"><span translate="healthpointsApp.points.note">Note</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="user.login"><span translate="healthpointsApp.points.user">User</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th></th>
-                </tr>
+            <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.reset()">
+                <th translate="healthpointsApp.points.date">Date</th>
+                <th translate="healthpointsApp.points.exercise">Exercise</th>
+                <th translate="healthpointsApp.points.meals">Meals</th>
+                <th translate="healthpointsApp.points.alcohol">Alcohol</th>
+                <th translate="healthpointsApp.points.note">Note</th>
+                <th translate="healthpointsApp.points.user">User</th>
+                <th translate="healthpointsApp.points.actions" class="col-md-2">Actions</th>
+
+            </tr>
             </thead>
             <tbody infinite-scroll="vm.loadPage(vm.page + 1)" infinite-scroll-disabled="vm.page >= vm.links['last']">
-                <tr ng-repeat="points in vm.points track by points.id">
-                    <td><a ui-sref="points-detail({id:points.id})">{{points.id}}</a></td>
-                        <td>{{points.date | date:'mediumDate'}}</td>
-                    <td>{{points.exercise}}</td>
-                    <td>{{points.meals}}</td>
-                    <td>{{points.alcohol}}</td>
-                    <td>{{points.note}}</td>
-                    <td>
-                        {{points.user.login}}
-                    </td>
-                    <td class="text-right">
-                        <div class="btn-group flex-btn-group-container">
-                            <button type="submit"
-                                    ui-sref="points-detail({id:points.id})"
-                                    class="btn btn-info btn-sm">
-                                <span class="glyphicon glyphicon-eye-open"></span>
-                                <span class="hidden-xs hidden-sm" translate="entity.action.view"></span>
-                            </button>
-                            <button type="submit"
-                                    ui-sref="points.edit({id:points.id})"
-                                    class="btn btn-primary btn-sm">
-                                <span class="glyphicon glyphicon-pencil"></span>
-                                <span class="hidden-xs hidden-sm" translate="entity.action.edit"></span>
-                            </button>
-                            <button type="submit"
-                                    ui-sref="points.delete({id:points.id})"
-                                    class="btn btn-danger btn-sm">
-                                <span class="glyphicon glyphicon-remove-circle"></span>
-                                <span class="hidden-xs hidden-sm" translate="entity.action.delete"></span>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+            <tr ng-repeat="points in vm.points track by points.id">
+                <td>{{points.date | date:'mediumDate'}}</td>
+                <td class="text-center">
+                    <i class="glyphicon"
+                       ng-class="{'glyphicon-ok text-success': points.exercise,'glyphicon-remove text-danger': !points.exercise}"></i>
+                </td>
+                <td class="text-center">
+                    <i class="glyphicon"
+                       ng-class="{'glyphicon-ok text-success': points.meals,'glyphicon-remove text-danger': !points.meals}"></i>
+                </td>
+                <td class="text-center">
+                    <i class="glyphicon"
+                       ng-class="{'glyphicon-ok text-success': points.alcohol,'glyphicon-remove text-danger': !points.alcohol}"></i>
+                </td>
+                <td>
+                    <div class="truncate cursor" popover="{{points.note}}">{{points.note}}</div>
+                </td>
+                <td>{{points.user.login}}</td>
+                <td>
+                    <div class="btn-group m-n">
+                        <button type="submit" tooltip="{{'entity.action.view' | translate}}"
+                                ui-sref="points.detail({id:points.id})" class="btn btn-info btn-xs">
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                        </button>
+                        <button type="submit" tooltip="{{'entity.action.edit' | translate}}"
+                                ui-sref="points.edit({id:points.id})" class="btn btn-primary btn-xs">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </button>
+                        <button type="submit" tooltip="{{'entity.action.delete' | translate}}"
+                                ng-click="delete(points.id)" class="btn btn-danger btn-xs">
+                            <span class="glyphicon glyphicon-remove-circle"></span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>
