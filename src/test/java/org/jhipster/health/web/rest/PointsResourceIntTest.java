@@ -3,6 +3,7 @@ package org.jhipster.health.web.rest;
 import org.jhipster.health.HealthpointsApp;
 import org.jhipster.health.domain.Points;
 import org.jhipster.health.repository.PointsRepository;
+import org.jhipster.health.repository.UserRepository;
 import org.jhipster.health.repository.search.PointsSearchRepository;
 
 import org.junit.Before;
@@ -10,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
@@ -21,6 +23,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -31,6 +34,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 
 /**
@@ -63,6 +69,9 @@ public class PointsResourceIntTest {
     private PointsRepository pointsRepository;
 
     @Inject
+    private UserRepository userRepository;
+
+    @Inject
     private PointsSearchRepository pointsSearchRepository;
 
     @Inject
@@ -75,12 +84,16 @@ public class PointsResourceIntTest {
 
     private Points points;
 
+    @Autowired
+    private WebApplicationContext context;
+
     @PostConstruct
     public void setup() {
         MockitoAnnotations.initMocks(this);
         PointsResource pointsResource = new PointsResource();
         ReflectionTestUtils.setField(pointsResource, "pointsSearchRepository", pointsSearchRepository);
         ReflectionTestUtils.setField(pointsResource, "pointsRepository", pointsRepository);
+        ReflectionTestUtils.setField(pointsResource, "userRepository", userRepository);
         this.restPointsMockMvc = MockMvcBuilders.standaloneSetup(pointsResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -102,9 +115,16 @@ public class PointsResourceIntTest {
     public void createPoints() throws Exception {
         int databaseSizeBeforeCreate = pointsRepository.findAll().size();
 
+        // create security-aware mockMvc
+        restPointsMockMvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .build();
+
         // Create the Points
 
         restPointsMockMvc.perform(post("/api/points")
+                .with(user("user"))
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(points)))
                 .andExpect(status().isCreated());
