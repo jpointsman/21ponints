@@ -2,8 +2,11 @@ package org.jhipster.health.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import org.jhipster.health.domain.Preferences;
+import org.jhipster.health.domain.User;
 import org.jhipster.health.repository.PreferencesRepository;
+import org.jhipster.health.repository.UserRepository;
 import org.jhipster.health.repository.search.PreferencesSearchRepository;
+import org.jhipster.health.security.SecurityUtils;
 import org.jhipster.health.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +42,9 @@ public class PreferencesResource {
     @Inject
     private PreferencesSearchRepository preferencesSearchRepository;
 
+    @Inject
+    private UserRepository userRepository;
+
     /**
      * POST  /preferences : Create a new preferences.
      *
@@ -57,6 +63,12 @@ public class PreferencesResource {
         }
         Preferences result = preferencesRepository.save(preferences);
         preferencesSearchRepository.save(result);
+
+        log.debug("Settings preferences for current user: {}", SecurityUtils.getCurrentUserLogin());
+        User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
+        user.setPreferences(result);
+        userRepository.save(user);
+
         return ResponseEntity.created(new URI("/api/preferences/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("preferences", result.getId().toString()))
             .body(result);
@@ -104,6 +116,27 @@ public class PreferencesResource {
     }
 
     /**
+     * GET  /my-preferences -> get the current user's preferences.
+     */
+    @RequestMapping(value = "/my-preferences",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public ResponseEntity<Preferences> getUserPreferences() {
+        String username = SecurityUtils.getCurrentUserLogin();
+        log.debug("REST request to get Preferences : {}", username);
+        User user = userRepository.findOneByLogin(username).get();
+
+        if (user.getPreferences() != null) {
+            return new ResponseEntity<>(user.getPreferences(), HttpStatus.OK);
+        } else {
+            Preferences defaultPreferences = new Preferences();
+            defaultPreferences.setWeekly_goal(10); // default
+            return new ResponseEntity<>(defaultPreferences, HttpStatus.OK);
+        }
+    }
+
+    /**
      * GET  /preferences/:id : get the "id" preferences.
      *
      * @param id the id of the preferences to retrieve
@@ -135,6 +168,15 @@ public class PreferencesResource {
     @Timed
     public ResponseEntity<Void> deletePreferences(@PathVariable Long id) {
         log.debug("REST request to delete Preferences : {}", id);
+
+        if (SecurityUtils.getCurrentUserLogin() != null) {
+            User user = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get();
+            if (user.getPreferences().getId() == id) {
+                user.setPreferences(null);
+                userRepository.save(user);
+            }
+        }
+
         preferencesRepository.delete(id);
         preferencesSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("preferences", id.toString())).build();

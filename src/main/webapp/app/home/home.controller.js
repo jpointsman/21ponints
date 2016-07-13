@@ -5,9 +5,9 @@
         .module('healthpointsApp')
         .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['$scope', 'Principal', 'Points', 'LoginService', '$state'];
+    HomeController.$inject = ['$scope', 'Principal', 'Points', 'Preferences', 'LoginService', '$state'];
 
-    function HomeController ($scope, Principal, Points, LoginService, $state) {
+    function HomeController ($scope, Principal, Points, Preferences, LoginService, $state) {
         var vm = this;
 
         vm.account = null;
@@ -29,6 +29,10 @@
         function register () {
             $state.go('register');
         }
+
+        Preferences.user(function(data){
+            vm.preferences = data;
+        });
 
         Points.thisWeek(function(data){
             vm.pointsThisWeek = data;

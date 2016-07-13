@@ -32,9 +32,13 @@
                         <div class="col-md-10">
                             <div class="progress progress-lg" ng-show="vm.pointsThisWeek.points">
                                 <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+                                     ng-class="{'progress-bar-success': vm.pointsThisWeek.points >= vm.preferences.weekly_goal,
+                                        'progress-bar-danger': vm.pointsThisWeek.points < 10,
+                                        'progress-bar-warning': vm.pointsThisWeek.points > 10 &&
+                                        pointsThisWeek.points < vm.preferences.weekly_goal}"
                                      aria-valuenow="{{vm.pointsThisWeek.points}}"
                                      aria-valuemin="0" aria-valuemax="21" style="width: {{vm.pointsPersentag}}%;">
-                                    {{vm.pointsThisWeek.points}} / Goal: 10
+                                    {{vm.pointsThisWeek.points}} / Goal: {{vm.preferences.weekly_goal}}
                                 </div>
                             </div>
                             <alert type="info" ng-hide="vm.pointsThisWeek.points">
