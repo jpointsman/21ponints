@@ -105,6 +105,14 @@ Main page styles
     background-size: contain;
 }
 
+.heart {
+    display: inline-block;
+    width: 347px;
+    height: 347px;
+    background: url("../images/21-points-logo.jpg") no-repeat center top;
+    background-size: contain;
+}
+
 /* wait autoprefixer update to allow simple generation of high pixel density media query */
 @media
 only screen and (-webkit-min-device-pixel-ratio: 2),
@@ -115,6 +123,10 @@ only screen and (                min-resolution: 192dpi),
 only screen and (                min-resolution: 2dppx) {
     .hipster {
         background: url("../images/hipster2x.png") no-repeat center top;
+        background-size: contain;
+    }
+    .heart {
+        background: url("../images/21-points-logo2x.jpg") no-repeat center top;
         background-size: contain;
     }
 }
