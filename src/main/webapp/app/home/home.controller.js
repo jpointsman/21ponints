@@ -5,9 +5,9 @@
         .module('healthpointsApp')
         .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['$scope', 'Principal', 'LoginService', '$state'];
+    HomeController.$inject = ['$scope', 'Principal', 'Points', 'LoginService', '$state'];
 
-    function HomeController ($scope, Principal, LoginService, $state) {
+    function HomeController ($scope, Principal, Points, LoginService, $state) {
         var vm = this;
 
         vm.account = null;
@@ -29,5 +29,18 @@
         function register () {
             $state.go('register');
         }
+
+        Points.thisWeek(function(data){
+            vm.pointsThisWeek = data;
+            vm.pointsPersentag = (data.points / 21) * 100;
+        });
+        //Points.thisWeek({}, onSuccess, onError);
+        //function onSuccess(data, headers) {
+        //    vm.pointsThiWeek = data;
+        //    vm.pointsPersentage = (data.points / 21) * 100;
+        //}
+        //function onError(error) {
+        //    AlertService.error(error.data.message);
+        //}
     }
 })();

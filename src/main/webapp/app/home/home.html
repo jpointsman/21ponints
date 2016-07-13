@@ -17,13 +17,31 @@
 
                 <div ng-switch-when="true">
                     <div class="row">
-                        <div class="col-md-4 text-right">
-                            <a ui-sref="points.add" class="btn btn-primary btn-raised">Add Points</a>
+                        <div class="col-md-6 col-xs-5">
+                            <h4 translate="home.points.thisWeek" class="m-t-sm hidden-xs"
+                                translate-values="{date: '{{vm.pointsThisWeek.week | date: 'longDate'}}'}">
+                                Points for the week of {{vm.pointsThisWeek.week | date: 'longDate'}}:
+                            </h4>
+                            <h4 translate="home.points.thisWeekMobile" class="m-t-sm visible-xs">
+                                Points for {{vm.pointsThisWeek.week | date: 'longDate'}}:
+                            </h4>
                         </div>
-
+                        <div class="col-md-4 text-right">
+                            <a ui-sref="points.add" class="btn btn-primary btn-raised m-n m-b-xs">Add Points</a>
+                        </div>
+                        <div class="col-md-10">
+                            <div class="progress progress-lg" ng-show="vm.pointsThisWeek.points">
+                                <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+                                     aria-valuenow="{{vm.pointsThisWeek.points}}"
+                                     aria-valuemin="0" aria-valuemax="21" style="width: {{vm.pointsPersentag}}%;">
+                                    {{vm.pointsThisWeek.points}} / Goal: 10
+                                </div>
+                            </div>
+                            <alert type="info" ng-hide="vm.pointsThisWeek.points">
+                                No points yet this week, better get moving!
+                            </alert>
+                        </div>
                     </div>
-
-
                 </div>
 
 
@@ -41,7 +59,6 @@
                             &#xA0;<span translate="global.menu.account.login">Authenticate</span>.</a>
                     </strong>
                     </p>
-
 
 
                     <p translate="home.question">
