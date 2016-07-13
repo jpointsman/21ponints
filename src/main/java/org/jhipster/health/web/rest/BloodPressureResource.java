@@ -3,7 +3,11 @@ package org.jhipster.health.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import org.jhipster.health.domain.BloodPressure;
 import org.jhipster.health.repository.BloodPressureRepository;
+import org.jhipster.health.repository.UserRepository;
 import org.jhipster.health.repository.search.BloodPressureSearchRepository;
+import org.jhipster.health.security.AuthoritiesConstants;
+import org.jhipster.health.security.SecurityUtils;
+import org.jhipster.health.web.rest.dto.BloodPressureByPeriod;
 import org.jhipster.health.web.rest.util.HeaderUtil;
 import org.jhipster.health.web.rest.util.PaginationUtil;
 import org.slf4j.Logger;
@@ -20,12 +24,15 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.util.stream.Stream;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing BloodPressure.
@@ -35,13 +42,16 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
 public class BloodPressureResource {
 
     private final Logger log = LoggerFactory.getLogger(BloodPressureResource.class);
-        
+
     @Inject
     private BloodPressureRepository bloodPressureRepository;
-    
+
     @Inject
     private BloodPressureSearchRepository bloodPressureSearchRepository;
-    
+
+    @Inject
+    private UserRepository userRepository;
+
     /**
      * POST  /blood-pressures : Create a new bloodPressure.
      *
@@ -58,11 +68,37 @@ public class BloodPressureResource {
         if (bloodPressure.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("bloodPressure", "idexists", "A new bloodPressure cannot already have an ID")).body(null);
         }
+        if (!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
+            log.debug("No user passed in, using current user: {}", SecurityUtils.getCurrentUserLogin());
+            bloodPressure.setUser(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).get());
+        }
         BloodPressure result = bloodPressureRepository.save(bloodPressure);
         bloodPressureSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/blood-pressures/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("bloodPressure", result.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * GET  /bp-by-days -> get all the blood pressure readings by last x days.
+     */
+    @RequestMapping(value = "/bp-by-days/{days}")
+    @Timed
+    public ResponseEntity<BloodPressureByPeriod> getByDays(@PathVariable int days) {
+        LocalDate today = LocalDate.now();
+        LocalDate previousDate = today.minusDays(days);
+        ZonedDateTime daysAgo = previousDate.atStartOfDay(ZoneOffset.UTC);
+        ZonedDateTime rightNow = today.atStartOfDay(ZoneOffset.UTC);
+
+        List<BloodPressure> readings = bloodPressureRepository.findAllByTimestampBetweenOrderByTimestampDesc(daysAgo, rightNow);
+        BloodPressureByPeriod response = new BloodPressureByPeriod("Last " + days + " Days", filterByUser(readings));
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    private List<BloodPressure> filterByUser(List<BloodPressure> readings) {
+        Stream<BloodPressure> userReadings = readings.stream()
+            .filter(bp -> bp.getUser().getLogin().equals(SecurityUtils.getCurrentUserLogin()));
+        return userReadings.collect(Collectors.toList());
     }
 
     /**
@@ -103,8 +139,12 @@ public class BloodPressureResource {
     @Timed
     public ResponseEntity<List<BloodPressure>> getAllBloodPressures(Pageable pageable)
         throws URISyntaxException {
-        log.debug("REST request to get a page of BloodPressures");
-        Page<BloodPressure> page = bloodPressureRepository.findAll(pageable); 
+        Page<BloodPressure> page;
+        if (SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN)) {
+            page = bloodPressureRepository.findAllByOrderByTimestampDesc(pageable);
+        } else {
+            page = bloodPressureRepository.findByUserIsCurrentUser(pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/blood-pressures");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
