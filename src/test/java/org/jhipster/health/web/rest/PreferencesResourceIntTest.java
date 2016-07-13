@@ -3,6 +3,7 @@ package org.jhipster.health.web.rest;
 import org.jhipster.health.HealthpointsApp;
 import org.jhipster.health.domain.Preferences;
 import org.jhipster.health.repository.PreferencesRepository;
+import org.jhipster.health.repository.UserRepository;
 import org.jhipster.health.repository.search.PreferencesSearchRepository;
 
 import org.junit.Before;
@@ -10,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
@@ -27,10 +29,13 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.jhipster.health.domain.enumeration.Units;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  * Test class for the PreferencesResource REST controller.
@@ -54,6 +59,9 @@ public class PreferencesResourceIntTest {
     private PreferencesRepository preferencesRepository;
 
     @Inject
+    private UserRepository userRepository;
+
+    @Inject
     private PreferencesSearchRepository preferencesSearchRepository;
 
     @Inject
@@ -66,12 +74,16 @@ public class PreferencesResourceIntTest {
 
     private Preferences preferences;
 
+    @Autowired
+    private WebApplicationContext context;
+
     @PostConstruct
     public void setup() {
         MockitoAnnotations.initMocks(this);
         PreferencesResource preferencesResource = new PreferencesResource();
         ReflectionTestUtils.setField(preferencesResource, "preferencesSearchRepository", preferencesSearchRepository);
         ReflectionTestUtils.setField(preferencesResource, "preferencesRepository", preferencesRepository);
+        ReflectionTestUtils.setField(preferencesResource, "userRepository", userRepository);
         this.restPreferencesMockMvc = MockMvcBuilders.standaloneSetup(preferencesResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -90,9 +102,16 @@ public class PreferencesResourceIntTest {
     public void createPreferences() throws Exception {
         int databaseSizeBeforeCreate = preferencesRepository.findAll().size();
 
+        // create security-aware mockMvc
+        restPreferencesMockMvc = MockMvcBuilders
+            .webAppContextSetup(context)
+            .apply(springSecurity())
+            .build();
+
         // Create the Preferences
 
         restPreferencesMockMvc.perform(post("/api/preferences")
+                .with(user("user"))
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(preferences)))
                 .andExpect(status().isCreated());
